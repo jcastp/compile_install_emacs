@@ -37,7 +37,31 @@ fi
 
 cd "$EMACS_DIRECTORY"
 
-# export CC="gcc-11"
+# use the right gcc and library versions
+gcc_versions=("14" "12" "11")
+library_name="libgccjit"
+
+# Initialize variables for storing the found GCC and library versions
+latest_gcc_version=0
+latest_library_version=0
+
+for gcc_version in "${gcc_versions[@]}"; do
+  # Check if gcc-${gcc_version} is available using apt
+  if apt show gcc-${gcc_version} | grep -q "^Installed-Size: "; then
+    # If found, extract the version number from the output of apt
+    latest_gcc_version=$gcc_version
+    if apt show libgccjit-${gcc_version}-dev | grep -q "^Installed-Size: "; then
+      latest_library_version=$gcc_version
+      break
+    fi
+  fi
+done
+
+# Print the found GCC and library versions
+echo "Latest GCC version: ${latest_gcc_version}"
+echo "Latest library (${library_name}) version: ${latest_library_version}"
+
+export CC="gcc-${latest_gcc_version}"
 
 # compile everything, install emacs
 # Passing the CFLAGS to let the installer know where the libgccjit is located
