@@ -77,20 +77,20 @@ else
 fi
 
 # install Iosevka-comfy from a zip file
-echo "checking Iosevka Comfy font."
-font-manager -l | grep -e "Iosevka Comfy" >/dev/null
-if [[ $? -eq 0 ]]; then
-  # If the pattern is found, execute this block
-  echo "Iosevka Comfy font installed."
-  # Add your commands or actions here
-else
-  # If the pattern is not found, execute this block
-  echo "Installing Iosevka Comfy font."
-  # install iosevka-comfy from a file
-  # font-manager -i ~/Nextcloud/config/fonts/iosevka_comfy_ttf/*.ttf
-  font-manager -i ~/Nextcloud/config/fonts/iosevka-comfy-ttf-new/*.ttf
-  # add your commands or actions here
-fi
+# echo "checking Iosevka Comfy font."
+# font-manager -l | grep -e "Iosevka Comfy" >/dev/null
+# if [[ $? -eq 0 ]]; then
+#   # If the pattern is found, execute this block
+#   echo "Iosevka Comfy font installed."
+#   # Add your commands or actions here
+# else
+#   # If the pattern is not found, execute this block
+#   echo "Installing Iosevka Comfy font."
+#   # install iosevka-comfy from a file
+#   # font-manager -i ~/Nextcloud/config/fonts/iosevka_comfy_ttf/*.ttf
+#   font-manager -i ~/Nextcloud/config/fonts/iosevka-comfy-ttf-new/*.ttf
+#   # add your commands or actions here
+# fi
 
 # install Iosevka Nerd fonts from a zip file
 echo "checking Iosevka Comfy Nerd."
@@ -109,7 +109,7 @@ else
 fi
 
 # Install the lexend fonts
-echo "Installing Lexend fonts"
-(git clone https://github.com/googlefonts/lexend /home/tmp/lexend/ || (cd /home/tmp/lexend/ && git pull)) && font-manager -i /home/tmp/lexend/fonts/lexend/ttf/*.ttf
-echo "Installing Lexend Italic fonts"
-(git clone https://github.com/richardhriech/LexendItalic /home/tmp/lexend_italic/ || (cd /home/tmp/lexend_italic/ && git pull)) && font-manager -i /home/tmp/lexend_italic/*.ttf
+# echo "Installing Lexend fonts"
+# (git clone https://github.com/googlefonts/lexend /home/tmp/lexend/ || (cd /home/tmp/lexend/ && git pull)) && font-manager -i /home/tmp/lexend/fonts/lexend/ttf/*.ttf
+# echo "Installing Lexend Italic fonts"
+# (git clone https://github.com/richardhriech/LexendItalic /home/tmp/lexend_italic/ || (cd /home/tmp/lexend_italic/ && git pull)) && font-manager -i /home/tmp/lexend_italic/*.ttf
