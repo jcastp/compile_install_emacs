@@ -3,6 +3,7 @@
 # plus other dependencies
 
 # Install all the basic dependencies
+sudo apt-get install -y git
 sudo apt-get install -y build-essential
 sudo apt-get build-dep emacs
 sudo apt-get install -y autoconf
@@ -45,36 +46,38 @@ else
   # Add your commands or actions here
 fi
 
-echo "checking JetBrains font."
-font-manager -l | grep "JetBrains" >/dev/null
-if [[ $? -eq 0 ]]; then
-  # If the pattern is found, execute this block
-  echo "JetBrains font installed."
-  # Add your commands or actions here
-else
-  # If the pattern is not found, execute this block
-  echo "Installing JetBrains font."
-  font-manager -i ~/Nextcloud/config/fonts/JetBrainsMono/ttf/*.ttf
-  # Add your commands or actions here
-fi
+## commenting this, because we don't use it anymore
+# echo "checking JetBrains font."
+# font-manager -l | grep "JetBrains" >/dev/null
+# if [[ $? -eq 0 ]]; then
+#   # If the pattern is found, execute this block
+#   echo "JetBrains font installed."
+#   # Add your commands or actions here
+# else
+#   # If the pattern is not found, execute this block
+#   echo "Installing JetBrains font."
+#   font-manager -i ~/Nextcloud/config/fonts/JetBrainsMono/ttf/*.ttf
+#   # Add your commands or actions here
+# fi
 
+## commenting because we don't use it
 # install Iosevka from a zip file
-echo "checking Iosevka regular fonts."
-font-manager -l | grep -e "^Iosevka$" >/dev/null
-if [[ $? -eq 0 ]]; then
-  # If the pattern is found, execute this block
-  echo "Iosevka fonts installed."
-  # Add your commands or actions here
-else
-  # If the pattern is not found, execute this block
-  echo "Installing Iosevka fonts."
-  # unzip -o ~/Nextcloud/config/fonts/super-ttc-iosevka-23.0.0.zip -d /tmp
-  unzip -o ~/Nextcloud/config/fonts/SuperTTC-Iosevka-31.3.0.zip -d /tmp
-  font-manager -i /tmp/Iosevka.ttc
-  # install iosevka-comfy from a file
-  font-manager -i ~/Nextcloud/config/fonts/iosevka*.ttf
-  # Add your commands or actions here
-fi
+# echo "checking Iosevka regular fonts."
+# font-manager -l | grep -e "^Iosevka$" >/dev/null
+# if [[ $? -eq 0 ]]; then
+#   # If the pattern is found, execute this block
+#   echo "Iosevka fonts installed."
+#   # Add your commands or actions here
+# else
+#   # If the pattern is not found, execute this block
+#   echo "Installing Iosevka fonts."
+#   # unzip -o ~/Nextcloud/config/fonts/super-ttc-iosevka-23.0.0.zip -d /tmp
+#   unzip -o ~/Nextcloud/config/fonts/SuperTTC-Iosevka-31.3.0.zip -d /tmp
+#   font-manager -i /tmp/Iosevka.ttc
+#   # install iosevka-comfy from a file
+#   font-manager -i ~/Nextcloud/config/fonts/iosevka*.ttf
+#   # Add your commands or actions here
+# fi
 
 # install Iosevka-comfy from a zip file
 # echo "checking Iosevka Comfy font."
@@ -93,20 +96,20 @@ fi
 # fi
 
 # install Iosevka Nerd fonts from a zip file
-echo "checking Iosevka Comfy Nerd."
-font-manager -l | grep -e "Iosevka Nerd" >/dev/null
-if [[ $? -eq 0 ]]; then
-  # If the pattern is found, execute this block
-  echo "Iosevka Nerd font installed."
-  # Add your commands or actions here
-else
-  # If the pattern is not found, execute this block
-  echo "Installing Iosevka Nerd font."
-  # install iosevka-comfy from a file
-  unzip -o ~/Nextcloud/config/fonts/IosevkaNerdFont.zip -d /tmp
-  font-manager -i /tmp/IosevkaNerd*
-  # add your commands or actions here
-fi
+# echo "checking Iosevka Comfy Nerd."
+# font-manager -l | grep -e "Iosevka Nerd" >/dev/null
+# if [[ $? -eq 0 ]]; then
+#   # If the pattern is found, execute this block
+#   echo "Iosevka Nerd font installed."
+#   # Add your commands or actions here
+# else
+#   # If the pattern is not found, execute this block
+#   echo "Installing Iosevka Nerd font."
+#   # install iosevka-comfy from a file
+#   unzip -o ~/Nextcloud/config/fonts/IosevkaNerdFont.zip -d /tmp
+#   font-manager -i /tmp/IosevkaNerd*
+#   # add your commands or actions here
+# fi
 
 # Install the lexend fonts
 # echo "Installing Lexend fonts"
