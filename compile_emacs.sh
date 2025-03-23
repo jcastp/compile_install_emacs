@@ -5,37 +5,21 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Directory to clone emacs to from git
-EMACS_DIRECTORY='/home/jcastp/tmp/emacs'
+EMACS_DIRECTORY='/home/tmp/emacs'
 
 # If we want to install a stable version
 VERSION='emacs-30.1'
 
-# install tree-sitter from source, as seen here: https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
-# and load "sudo ldconfig"
-# to load the modules, you will need to follow up the instructions there
-
 # Check if the directory receiving the code exists
-if [[ -d "$EMACS_DIRECTORY" ]]
-then
+if [[ -d "$EMACS_DIRECTORY" ]]; then
   echo "$EMACS_DIRECTORY exists on your filesystem."
-  # delete the directory
-  rm -rf "$EMACS_DIRECTORY"
-fi
-
-# Clone the git repository
-# With the "--stable" flag, we clone the stable version defined above
-# Without it, we get the last commit
-if [ $# -gt 0 ] && [ "$1" = "--stable" ]; then
-  echo "${RED}Installing stable version of emacs${NC}"
-  # check with the git protocol and, if it fails, go for the https
-  git clone --depth 1 --branch ${VERSION} git://git.sv.gnu.org/emacs.git "$EMACS_DIRECTORY" || git clone --depth 1 --branch ${VERSION} https://git.savannah.gnu.org/git/emacs.git "$EMACS_DIRECTORY"
+  echo "getting the diffs from upstream."
+  cd "$EMACS_DIRECTORY" && git pull
 else
-  # Without a version, just the latest commit
-  echo "Installing HEAD version of emacs"
-  git clone --depth 1 git://git.sv.gnu.org/emacs.git "$EMACS_DIRECTORY" || git clone --depth 1 https://git.savannah.gnu.org/git/emacs.git "$EMACS_DIRECTORY"
+  echo "cloning emacs source code"
+  # test either git or http protocol
+  git clone git://git.sv.gnu.org/emacs.git "$EMACS_DIRECTORY" || git clone https://git.savannah.gnu.org/git/emacs.git "$EMACS_DIRECTORY"
 fi
-
-cd "$EMACS_DIRECTORY"
 
 # use the right gcc and library versions
 gcc_versions=("14" "12" "11")
@@ -47,10 +31,10 @@ latest_library_version=0
 
 for gcc_version in "${gcc_versions[@]}"; do
   # Check if gcc-${gcc_version} is available using apt
-  if apt show gcc-${gcc_version} | grep -q "^Installed-Size: "; then
+  if apt show gcc-"${gcc_version}" | grep -q "^Installed-Size: "; then
     # If found, extract the version number from the output of apt
     latest_gcc_version=$gcc_version
-    if apt show libgccjit-${gcc_version}-dev | grep -q "^Installed-Size: "; then
+    if apt show libgccjit-"${gcc_version}"-dev | grep -q "^Installed-Size: "; then
       latest_library_version=$gcc_version
       break
     fi
@@ -61,23 +45,39 @@ done
 echo "Latest GCC version: ${latest_gcc_version}"
 echo "Latest library (${library_name}) version: ${latest_library_version}"
 
+# Passing the CFLAGS to let the installer know where the libgccjit is located
 export CC="gcc-${latest_gcc_version}"
 
+
+cd "$EMACS_DIRECTORY" || exit 1
+
+# be sure to have the HEAD pointing to the latest commit.
+git checkout master
+
+# if option is "--stable" we point git to that tag
+if [ $# -gt 0 ] && [ "$1" = "--stable" ]; then
+  echo "${RED}Installing stable version of emacs${NC}"
+  git checkout "${VERSION}"
+fi
+
 # compile everything, install emacs
-# Passing the CFLAGS to let the installer know where the libgccjit is located
-# ./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter=ifavailable --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
 ./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
 
+# Return the HEAD to the latest commit
+if [ $# -gt 0 ] && [ "$1" = "--stable" ]; then
+  git checkout master
+fi
+
 # Get outside the directory
-cd
+cd || exit 1
 
 # Remove the directory after all the actions
 # Check if the directory exists
-if [[ -d "$EMACS_DIRECTORY" ]]
-then
-  echo "$EMACS_DIRECTORY exists on your filesystem."
-  # delete the directory
-  rm -rf "$EMACS_DIRECTORY"
-fi
+# if [[ -d "$EMACS_DIRECTORY" ]]
+# then
+#   echo "$EMACS_DIRECTORY exists on your filesystem."
+#   # delete the directory
+#   rm -rf "$EMACS_DIRECTORY"
+# fi
 
 exit 0
