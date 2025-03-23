@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 EMACS_DIRECTORY='/home/jcastp/tmp/emacs'
 
 # If we want to install a stable version
-VERSION='emacs-29.1'
+VERSION='emacs-30.1'
 
 # install tree-sitter from source, as seen here: https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
 # and load "sudo ldconfig"
@@ -65,8 +65,8 @@ export CC="gcc-${latest_gcc_version}"
 
 # compile everything, install emacs
 # Passing the CFLAGS to let the installer know where the libgccjit is located
-# ./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-json --with-threads --with-native-compilation --with-tree-sitter=ifavailable --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
-./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-json --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
+# ./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter=ifavailable --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
+./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
 
 # Get outside the directory
 cd
