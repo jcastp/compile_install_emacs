@@ -9,7 +9,7 @@ sudo apt-get build-dep emacs
 sudo apt-get install -y autoconf
 
 # libraries for more advanced emacs functions
-sudo apt install -y libxml2-dev libjansson-dev libotf1 libotf-dev sqlite3 sqlite3-tools libsqlite3-dev libsqlite-0
+sudo apt install -y libxml2-dev libjansson-dev libotf1 libotf-dev sqlite3 sqlite3-tools libsqlite3-dev libsqlite3-0
 sudo apt install -y build-essential texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libxaw7-dev libgnutls*-dev
 
 # gcc-jit compile
@@ -29,4 +29,3 @@ sudo apt install -y shfmt
 
 # plantUML related install
 sudo apt install -y plantuml
-

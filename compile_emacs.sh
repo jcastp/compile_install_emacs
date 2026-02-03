@@ -4,22 +4,84 @@
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Directory to clone emacs to from git
-EMACS_DIRECTORY='/home/tmp/emacs'
+EMACS_DIRECTORY="$HOME/tmp/emacs_permanent"
+# EMACS_REPO="https://git.savannah.gnu.org/git/emacs.git"
+EMACS_REPO="https://github.com/emacs-mirror/emacs"
+STABLE_TAG="emacs-30.2"  # Change this to the desired stable tag
 
-# If we want to install a stable version
-VERSION='emacs-30.1'
+# Function to check if directory is a git repository
+is_git_repo() {
+    [ -d "$1/.git" ]
+}
 
-# Check if the directory receiving the code exists
-if [[ -d "$EMACS_DIRECTORY" ]]; then
-  echo "$EMACS_DIRECTORY exists on your filesystem."
-  echo "getting the diffs from upstream."
-  cd "$EMACS_DIRECTORY" && git pull
-else
-  echo "cloning emacs source code"
-  # test either git or http protocol
-  git clone git://git.sv.gnu.org/emacs.git "$EMACS_DIRECTORY" || git clone https://git.savannah.gnu.org/git/emacs.git "$EMACS_DIRECTORY"
+USE_STABLE=false
+if [[ "$1" == "--stable" ]]; then
+    USE_STABLE=true
 fi
+
+echo "Target directory: $EMACS_DIRECTORY"
+echo "Using stable version: $USE_STABLE"
+
+# Check if target directory exists
+if [ -d "$EMACS_DIRECTORY" ]; then
+    echo "Directory exists: $EMACS_DIRECTORY"
+    
+    # Check if it's a git repository
+    if is_git_repo "$EMACS_DIRECTORY"; then
+        echo "Directory is a git repository. Pulling latest changes..."
+        cd "$EMACS_DIRECTORY" || exit 1
+        
+        # Pull the latest changes
+        git pull origin master
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to pull changes"
+            exit 1
+        fi
+    else
+        echo "Error: Directory exists but is not a git repository"
+        echo "Please remove $EMACS_DIRECTORY or choose a different target directory"
+        exit 1
+    fi
+else
+    echo "Directory does not exist. Cloning repository..."
+    
+    # Create parent directory if it doesn't exist
+    mkdir -p "$(dirname "$EMACS_DIRECTORY")"
+    
+    # Clone the repository
+    git clone "$EMACS_REPO" "$EMACS_DIRECTORY"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to clone repository"
+        exit 1
+    fi
+    
+    cd "$EMACS_DIRECTORY" || exit 1
+fi
+
+# Switch to stable tag or stay on HEAD
+if [ "$USE_STABLE" = true ]; then
+    echo "Switching to stable tag: $STABLE_TAG"
+    git checkout "$STABLE_TAG"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to checkout stable tag $STABLE_TAG"
+        echo "Available tags:"
+        git tag -l | grep "emacs-" | tail -10
+        exit 1
+    fi
+    echo "Successfully switched to stable tag: $STABLE_TAG"
+else
+    echo "Staying on HEAD (latest development version)"
+    git checkout master
+    if [ $? -ne 0 ]; then
+        echo "Warning: Failed to checkout master branch, staying on current branch"
+    fi
+fi
+
+echo "Done! Emacs source code is ready in: $EMACS_DIRECTORY"
+echo "Current branch/tag: $(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --exact-match 2>/dev/null || echo "detached HEAD")"
+
+
+cd "$EMACS_DIRECTORY"
 
 # use the right gcc and library versions
 gcc_versions=("14" "12" "11")
@@ -71,8 +133,8 @@ fi
 # Get outside the directory
 cd || exit 1
 
-# Remove the directory after all the actions
-# Check if the directory exists
+# # Remove the directory after all the actions
+# # Check if the directory exists
 # if [[ -d "$EMACS_DIRECTORY" ]]
 # then
 #   echo "$EMACS_DIRECTORY exists on your filesystem."
