@@ -1,5 +1,6 @@
 #!/bin/bash
 # deploy emacs config from codeberg.org
+set -euo pipefail
 
 GIT_CONFIG_REPO='https://codeberg.org/jcastp/emacs.d.git'
 # Local directory to deploy the config
@@ -38,7 +39,7 @@ then
 fi
 
 # Now we deploy the config
-git clone $GIT_CONFIG_REPO $EMACS_INSTALL_DIR
+git clone "$GIT_CONFIG_REPO" "$EMACS_INSTALL_DIR" || { echo "Clone failed"; exit 1; }
 # This code is to replace the remote for pushing
 # We want to pull from codeberg without authentication, but push with it
 # This is done with fetch in http, but push is ssh
