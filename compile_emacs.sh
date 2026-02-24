@@ -1,5 +1,6 @@
 #!/bin/bash
 # Compile emacs from source
+set -euo pipefail
 
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -15,7 +16,7 @@ is_git_repo() {
 }
 
 USE_STABLE=false
-if [[ "$1" == "--stable" ]]; then
+if [[ "${1:-}" == "--stable" ]]; then
     USE_STABLE=true
 fi
 
@@ -71,10 +72,7 @@ if [ "$USE_STABLE" = true ]; then
     echo "Successfully switched to stable tag: $STABLE_TAG"
 else
     echo "Staying on HEAD (latest development version)"
-    git checkout master
-    if [ $? -ne 0 ]; then
-        echo "Warning: Failed to checkout master branch, staying on current branch"
-    fi
+    git checkout master || echo "Warning: Failed to checkout master branch, staying on current branch"
 fi
 
 echo "Done! Emacs source code is ready in: $EMACS_DIRECTORY"
@@ -113,20 +111,11 @@ export CC="gcc-${latest_gcc_version}"
 
 cd "$EMACS_DIRECTORY" || exit 1
 
-# be sure to have the HEAD pointing to the latest commit.
-git checkout master
-
-# if option is "--stable" we point git to that tag
-if [ $# -gt 0 ] && [ "$1" = "--stable" ]; then
-  echo "${RED}Installing stable version of emacs${NC}"
-  git checkout "${VERSION}"
-fi
-
 # compile everything, install emacs
-./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j 4 bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
+./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j "$(nproc)" bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
 
 # Return the HEAD to the latest commit
-if [ $# -gt 0 ] && [ "$1" = "--stable" ]; then
+if [ "$USE_STABLE" = true ]; then
   git checkout master
 fi
 
