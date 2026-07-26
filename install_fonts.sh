@@ -1,12 +1,31 @@
-#!/usr/bin/env sh
-set -e
+#!/bin/bash
+# Install the fonts used by the emacs config
+set -euo pipefail
 
-INSTALL_DIR=/home/tmp
-ETBEMBO_DIR="${ETBEMBO_DIR:-$HOME/Nextcloud/config/fonts/ET_Bembo}"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/tmp}"
+FONT_DIR="$HOME/.local/share/fonts"
+
+APORETIC_REPO=https://github.com/protesilaos/aporetic.git
+# Fork of Edward Tufte's ET Book with OTF conversions and a fixed ligature table
+ETBEMBO_REPO=https://github.com/DavidBarts/ET_Bembo.git
+
+mkdir -p "$INSTALL_DIR" "$FONT_DIR"
+
+# Clone the repo, or update it if it is already there
+clone_or_update() {
+  repo="$1"
+  dest="$2"
+  if [[ -d "$dest/.git" ]]; then
+    git -C "$dest" pull --ff-only
+  else
+    git clone --depth 1 "$repo" "$dest"
+  fi
+}
 
 # Install the aporetic fonts (https://protesilaos.com/codelog/2025-02-04-aporetic-fonts-1-0-0/)
 echo "Installing Aporetic fonts"
-(git clone --depth 1 https://github.com/protesilaos/aporetic.git "$INSTALL_DIR/aporetic-fonts" || (cd "$INSTALL_DIR/aporetic-fonts/" && git pull)) && (cp "$INSTALL_DIR/aporetic-fonts"/*/TTF/*.ttf ~/.local/share/fonts/ && fc-cache -f)
+clone_or_update "$APORETIC_REPO" "$INSTALL_DIR/aporetic-fonts"
+cp "$INSTALL_DIR/aporetic-fonts"/*/TTF/*.ttf "$FONT_DIR/"
 
 # install fonts
 sudo apt install -y font-manager
@@ -17,10 +36,8 @@ if fc-list | grep -qi "ETBembo"; then
   echo "ETBembo font already installed."
 else
   echo "Installing ETBembo font."
-  if [[ -d "$ETBEMBO_DIR" ]]; then
-    cp "$ETBEMBO_DIR"/*.otf ~/.local/share/fonts/
-    fc-cache -f
-  else
-    echo "ETBembo source directory not found: $ETBEMBO_DIR"
-  fi
+  clone_or_update "$ETBEMBO_REPO" "$INSTALL_DIR/et-bembo-fonts"
+  cp "$INSTALL_DIR/et-bembo-fonts"/*.otf "$FONT_DIR/"
 fi
+
+fc-cache -f
