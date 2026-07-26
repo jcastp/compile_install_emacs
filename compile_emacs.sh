@@ -82,7 +82,7 @@ echo "Current branch/tag: $(git symbolic-ref --short HEAD 2>/dev/null || git des
 cd "$EMACS_DIRECTORY"
 
 # use the right gcc and library versions
-gcc_versions=("14" "12" "11")
+gcc_versions=("15" "14" "12" "11")
 library_name="libgccjit"
 
 # Initialize variables for storing the found GCC and library versions
@@ -112,7 +112,7 @@ export CC="gcc-${latest_gcc_version}"
 cd "$EMACS_DIRECTORY" || exit 1
 
 # compile everything, install emacs
-./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make -j "$(nproc)" bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
+./autogen.sh && ./configure --with-x-toolkit=lucid --with-mailutils --with-threads --with-native-compilation --with-tree-sitter --with-xml2 && make V=1 -j "$(nproc)" bootstrap && sudo make install && echo -e "${RED}emacs has been installed${NC}"
 
 # Return the HEAD to the latest commit
 if [ "$USE_STABLE" = true ]; then

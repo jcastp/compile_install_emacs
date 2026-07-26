@@ -15,10 +15,10 @@ sudo apt-get install -y libxml2-dev libjansson-dev libotf1 libotf-dev sqlite3 sq
 sudo apt-get install -y build-essential texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libxaw7-dev libgnutls*-dev
 
 # gcc-jit compile
-sudo apt-get install -y libgccjit-14-dev libgccjit-13-dev libgccjit-12-dev libgccjit-11-dev
+sudo apt-get install -y libgccjit-15-dev libgccjit-14-dev libgccjit-13-dev libgccjit-12-dev
 
 # install the needed tools for emacs
-sudo apt-get install -y ripgrep pandoc git fd-find xclip scrot gnuplot shellcheck graphviz fd-find hunspell hunspell-es ffmpegthumbnailer mediainfo texinfo libtree-sitter-dev
+sudo apt-get install -y ripgrep pandoc git fd-find xclip scrot gnuplot shellcheck graphviz fd-find hunspell hunspell-en-us hunspell-es ffmpegthumbnailer mediainfo texinfo libtree-sitter-dev
 
 # needed for the pdf-tools package
 sudo apt-get install -y libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
@@ -27,7 +27,7 @@ sudo apt-get install -y libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-pri
 sudo apt-get install -y isort pipenv python3-nose python3-pytest python3-pylsp python3-pyflakes python3-flake8-black
 
 # other packages
-sudo apt-get install -y shfmt
+sudo apt-get install -y shfmt libenchant-2-dev pkgconf
 
 # plantUML related install
 sudo apt-get install -y plantuml
