@@ -63,4 +63,4 @@ apt_install isort pipenv python3-nose python3-pytest python3-pylsp python3-pyfla
 apt_install shfmt libenchant-2-dev pkgconf
 
 # plantUML related install
-apt_install plantuml
+# apt_install plantuml
