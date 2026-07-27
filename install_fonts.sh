@@ -6,7 +6,7 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/tmp}"
 FONT_DIR="$HOME/.local/share/fonts"
 
 # add the Hack font
-apt install -y fonts-hack
+sudo apt install -y fonts-hack
 
 APORETIC_REPO=https://github.com/protesilaos/aporetic.git
 # Fork of Edward Tufte's ET Book with OTF conversions and a fixed ligature table
